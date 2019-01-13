@@ -6,6 +6,7 @@ const ObjectId = require('mongodb').ObjectID;
 
 // Connection URL
 const url = 'mongodb://localhost:27017/testMongoose';
+//mongodb://denjoyuser:vndkjfn54_fd3fdk3r@157.230.30.115:27011/vending
 
 // Database Name
 const dbName = 'testMongoose';
@@ -39,7 +40,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
         (cllbck) => {
           db.renameCollection('action', 'Action', function(err) {
             if (err) {
-              console.log('err', cllbck);
+              console.log('err', err);
             };
 
             alias.updateMany({collection: 'action'}, {$set: {collectionName: 'Action'}, $unset: {collection: ''}}, function(err) {
@@ -48,7 +49,10 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
                 if (err) console.log(err);
                 tableheader.updateMany({collection: 'action'}, {$set: {collectionName: 'Action'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
-                  cllbck()
+                  tableheader.updateMany({collection: 'custom'}, {$set: {collectionName: 'custom'}, $unset: {collection: ''}}, function(err) {
+                    if (err) console.log(err);
+                    cllbck()
+                  })
                 })
               })
             })
@@ -110,24 +114,33 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
         (cllbck) => {
           db.renameCollection('balance', 'Balance', function(err) {
             if (err) {
-              console.log('err', cllbck);
+              console.log('err', err);
             };
-            alias.updateMany({collection: 'balance'}, {$set: {collectionName: 'Balance'}, $unset: {collection: ''}}, function(err) {
+            let Balance = db.collection('Balance');
+
+            Balance.dropIndex('organization_1_changedAt_1_monthly_1', function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'balance'}, {$set: {collectionName: 'Balance'}, $unset: {collection: ''}}, function(err) {
+              Balance.createIndex({changedAt: -1, organization: 1}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'balance'}, {$set: {collectionName: 'Balance'}, $unset: {collection: ''}}, function(err) {
+                alias.updateMany({collection: 'balance'}, {$set: {collectionName: 'Balance'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
-                  cllbck()
+                  datatype.updateMany({collection: 'balance'}, {$set: {collectionName: 'Balance'}, $unset: {collection: ''}}, function(err) {
+                    if (err) console.log(err);
+                    tableheader.updateMany({collection: 'balance'}, {$set: {collectionName: 'Balance'}, $unset: {collection: ''}}, function(err) {
+                      if (err) console.log(err);
+                      cllbck()
+                    })
+                  })
                 })
               })
             })
+
           })
         },
         (cllbck) => {
           db.renameCollection('cashflow', 'CashFlow', function(err) {
             if (err) {
-              console.log('err', cllbck);
+              console.log('err', err);
             };
             alias.updateMany({collection: 'cashflow'}, {$set: {collectionName: 'CashFlow'}, $unset: {collection: ''}}, function(err) {
               if (err) console.log(err);
@@ -144,7 +157,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
         (cllbck) => {
           db.renameCollection('category', 'Category', function(err) {
             if (err) {
-              console.log('err', cllbck);
+              console.log('err', err);
             };
             alias.updateMany({collection: 'category'}, {$set: {collectionName: 'Category'}, $unset: {collection: ''}}, function(err) {
               if (err) console.log(err);
@@ -197,16 +210,25 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
             if (err) {
               console.log('err', cllbck);
             };
-            alias.updateMany({collection: 'collaborator'}, {$set: {collectionName: 'Collaborator'}, $unset: {collection: ''}}, function(err) {
+            let Collaborator = db.collection('Collaborator');
+
+            Collaborator.dropIndex('organization_1_invisible_1', function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'collaborator'}, {$set: {collectionName: 'Collaborator'}, $unset: {collection: ''}}, function(err) {
+              Collaborator.createIndex('organization_1', function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'collaborator'}, {$set: {collectionName: 'Collaborator'}, $unset: {collection: ''}}, function(err) {
+                alias.updateMany({collection: 'collaborator'}, {$set: {collectionName: 'Collaborator'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
-                  cllbck()
+                  datatype.updateMany({collection: 'collaborator'}, {$set: {collectionName: 'Collaborator'}, $unset: {collection: ''}}, function(err) {
+                    if (err) console.log(err);
+                    tableheader.updateMany({collection: 'collaborator'}, {$set: {collectionName: 'Collaborator'}, $unset: {collection: ''}}, function(err) {
+                      if (err) console.log(err);
+                      cllbck()
+                    })
+                  })
                 })
               })
             })
+
           })
         },
         (cllbck) => {
@@ -248,13 +270,17 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
             if (err) {
               console.log('err', cllbck);
             };
-            alias.updateMany({collection: 'config'}, {$set: {collectionName: 'Config'}, $unset: {collection: ''}}, function(err) {
+            let Config = db.collection('Config');
+            Config.createIndex({terminal: 1}, function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'config'}, {$set: {collectionName: 'Config'}, $unset: {collection: ''}}, function(err) {
+              alias.updateMany({collection: 'config'}, {$set: {collectionName: 'Config'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'config'}, {$set: {collectionName: 'Config'}, $unset: {collection: ''}}, function(err) {
+                datatype.updateMany({collection: 'config'}, {$set: {collectionName: 'Config'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
-                  cllbck()
+                  tableheader.updateMany({collection: 'config'}, {$set: {collectionName: 'config'}, $unset: {collection: ''}}, function(err) {
+                    if (err) console.log(err);
+                    cllbck()
+                  })
                 })
               })
             })
@@ -286,7 +312,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
               if (err) console.log(err);
               datatype.updateMany({collection: 'contribution'}, {$set: {collectionName: 'Contribution'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'contribution'}, {$set: {collectionName: 'Contribution'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'contribution'}, {$set: {collectionName: 'contribution'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -333,12 +359,12 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
             if (err) {
               console.log('err', cllbck);
             };
-            datatype = db.collection('datatype');
-            alias.updateMany({collection: 'datatyps'}, {$set: {collectionName: 'DataType'}, $unset: {collection: ''}}, function(err) {
+            datatype = db.collection('DataType');
+            alias.updateMany({collection: 'datatype'}, {$set: {collectionName: 'DataType'}, $unset: {collection: ''}}, function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'datatyps'}, {$set: {collectionName: 'DataType'}, $unset: {collection: ''}}, function(err) {
+              datatype.updateMany({collection: 'datatype'}, {$set: {collectionName: 'DataType'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'datatyps'}, {$set: {collectionName: 'DataType'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'datatype'}, {$set: {collectionName: 'DataType'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -406,7 +432,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
               if (err) console.log(err);
               datatype.updateMany({collection: 'encashment'}, {$set: {collectionName: 'Encashment'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'encashment'}, {$set: {collectionName: 'Encashment'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'encashment'}, {$set: {collectionName: 'encashment'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -423,7 +449,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
               if (err) console.log(err);
               datatype.updateMany({collection: 'event'}, {$set: {collectionName: 'Event'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'event'}, {$set: {collectionName: 'Event'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'events'}, {$set: {collectionName: 'events'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -827,16 +853,30 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
             if (err) {
               console.log('err', cllbck);
             };
-            alias.updateMany({collection: 'sale'}, {$set: {collectionName: 'Sale'}, $unset: {collection: ''}}, function(err) {
+            let Sale = db.collection('Sale');
+
+            Sale.dropIndex('terminal_1_changedAt_-1', function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'sale'}, {$set: {collectionName: 'Sale'}, $unset: {collection: ''}}, function(err) {
+              Sale.dropIndex('terminal_1_changedAt_1', function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'sale'}, {$set: {collectionName: 'Sale'}, $unset: {collection: ''}}, function(err) {
+                Sale.createIndex({changedAt: -1, terminal: 1}, function(err) {
                   if (err) console.log(err);
-                  cllbck()
+                  alias.updateMany({collection: 'sale'}, {$set: {collectionName: 'Sale'}, $unset: {collection: ''}}, function(err) {
+                    if (err) console.log(err);
+                    datatype.updateMany({collection: 'sale'}, {$set: {collectionName: 'Sale'}, $unset: {collection: ''}}, function(err) {
+                      if (err) console.log(err);
+                      tableheader.updateMany({collection: 'sale'}, {$set: {collectionName: 'sale'}, $unset: {collection: ''}}, function(err) {
+                        if (err) console.log(err);
+                        cllbck()
+                      })
+                    })
+                  })
                 })
               })
+
+
             })
+
           })
         },
         (cllbck) => {
@@ -933,7 +973,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
               if (err) console.log(err);
               datatype.updateMany({collection: 'stock'}, {$set: {collectionName: 'Stock'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'stock'}, {$set: {collectionName: 'Stock'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'stock'}, {$set: {collectionName: 'stock'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -946,7 +986,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
             if (err) {
               console.log('err', cllbck);
             };
-            tableheader = db.collection('tableheader');
+            tableheader = db.collection('TableHeader');
             alias.updateMany({collection: 'tableheader'}, {$set: {collectionName: 'TableHeader'}, $unset: {collection: ''}}, function(err) {
               if (err) console.log(err);
               datatype.updateMany({collection: 'tableheader'}, {$set: {collectionName: 'TableHeader'}, $unset: {collection: ''}}, function(err) {
@@ -1011,15 +1051,15 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
           })
         },
         (cllbck) => {
-          db.renameCollection('tankerOrder', 'tankerOrder', function(err) {
+          db.renameCollection('tankerorder', 'TankerOrder', function(err) {
             if (err) {
               console.log('err', cllbck);
             };
-            alias.updateMany({collection: 'tankerOrder'}, {$set: {collectionName: 'TankerOrder'}, $unset: {collection: ''}}, function(err) {
+            alias.updateMany({collection: 'tankerorder'}, {$set: {collectionName: 'TankerOrder'}, $unset: {collection: ''}}, function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'tankerOrder'}, {$set: {collectionName: 'TankerOrder'}, $unset: {collection: ''}}, function(err) {
+              datatype.updateMany({collection: 'tankerorder'}, {$set: {collectionName: 'TankerOrder'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'tankerOrder'}, {$set: {collectionName: 'TankerOrder'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'tankerorder'}, {$set: {collectionName: 'TankerOrder'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -1087,7 +1127,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
               if (err) console.log(err);
               datatype.updateMany({collection: 'terminal'}, {$set: {collectionName: 'Terminal'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'terminal'}, {$set: {collectionName: 'Terminal'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'terminal'}, {$set: {collectionName: 'terminal'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -1117,11 +1157,11 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
             if (err) {
               console.log('err', cllbck);
             };
-            alias.updateMany({collection: 'terminalparams'}, {$set: {collectionName: 'TerminalParams'}, $unset: {collection: ''}}, function(err) {
+            alias.updateMany({collection: 'terminalParams'}, {$set: {collectionName: 'TerminalParams'}, $unset: {collection: ''}}, function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'terminalparams'}, {$set: {collectionName: 'TerminalParams'}, $unset: {collection: ''}}, function(err) {
+              datatype.updateMany({collection: 'terminalParams'}, {$set: {collectionName: 'TerminalParams'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'terminalparams'}, {$set: {collectionName: 'TerminalParams'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'terminalParams'}, {$set: {collectionName: 'terminalParams'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -1138,7 +1178,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
               if (err) console.log(err);
               datatype.updateMany({collection: 'terminaltype'}, {$set: {collectionName: 'TerminalType'}, $unset: {collection: ''}}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'terminaltype'}, {$set: {collectionName: 'TerminalType'}, $unset: {collection: ''}}, function(err) {
+                tableheader.updateMany({collection: 'type'}, {$set: {collectionName: 'type'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
                   cllbck()
                 })
@@ -1168,16 +1208,25 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
             if (err) {
               console.log('err', cllbck);
             };
-            alias.updateMany({collection: 'warning'}, {$set: {collectionName: 'Warning'}, $unset: {collection: ''}}, function(err) {
+            let Warning = db.collection('Warning');
+
+            Warning.dropIndex('terminal_1_createdAt_-1_active_1', function(err) {
               if (err) console.log(err);
-              datatype.updateMany({collection: 'warning'}, {$set: {collectionName: 'Warning'}, $unset: {collection: ''}}, function(err) {
+              Warning.createIndex({createdAt: -1, terminal: 1}, function(err) {
                 if (err) console.log(err);
-                tableheader.updateMany({collection: 'warning'}, {$set: {collectionName: 'Warning'}, $unset: {collection: ''}}, function(err) {
+                alias.updateMany({collection: 'warning'}, {$set: {collectionName: 'Warning'}, $unset: {collection: ''}}, function(err) {
                   if (err) console.log(err);
-                  cllbck()
+                  datatype.updateMany({collection: 'warning'}, {$set: {collectionName: 'Warning'}, $unset: {collection: ''}}, function(err) {
+                    if (err) console.log(err);
+                    tableheader.updateMany({collection: 'warning'}, {$set: {collectionName: 'Warning'}, $unset: {collection: ''}}, function(err) {
+                      if (err) console.log(err);
+                      cllbck()
+                    })
+                  })
                 })
               })
             })
+
           })
         },
 
@@ -1342,19 +1391,19 @@ function alias_terminaltype_alias_terminaltype(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({alias: 1, terminalType: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({alias: 1, terminalType: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({alias: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminalType: 1}, function(err) {
+        collection.createIndex({terminalType: 1, alias: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1386,19 +1435,19 @@ function collaborator_comment_user_commentrecipient(db) {
       //     next()
       //   })
       // },
+      // (next) => {
+      //   collection.createIndex({user: 1, commentRecipient: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({user: 1, commentRecipient: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({user: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({commentRecipient: 1}, function(err) {
+        collection.createIndex({commentRecipient: 1, user: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1449,19 +1498,19 @@ function collaborator_mapdata_subscriber_notification(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({subscriber: 1, notification: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({subscriber: 1, notification: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({subscriber: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({notification: 1}, function(err) {
+        collection.createIndex({notification: 1, subscriber: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1488,13 +1537,20 @@ function collaborator_permission_collaborator_permission(db) {
       },
       (next) => {
         collection = db.collection('Collaborator_Permission_collaborator_permission');
-        collection.updateMany({}, {$rename: {'collaborator_permissions': 'collaborator', 'permission_collaborators': 'permission'}, $unset: {collection: ''}}, function(err, res) {
-          if (err) {
-            console.log('err', err);
-            return next();
-          }
-          next();
+        collection.dropIndex('collaborator_permissions_1', function(err) {
+          if (err) console.log(err);
+          collection.dropIndex('permission_collaborators_1', function(err) {
+            if (err) console.log(err);
+            collection.updateMany({}, {$rename: {'collaborator_permissions': 'collaborator', 'permission_collaborators': 'permission'}, $unset: {collection: ''}}, function(err, res) {
+              if (err) {
+                console.log('err', err);
+                return next();
+              }
+              next();
+            })
+          })
         })
+
       },
       (next) => {
         checkDuplicates(collection, 'collaborator', 'permission').then(() => {
@@ -1503,19 +1559,19 @@ function collaborator_permission_collaborator_permission(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({collaborator: 1, permission: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({collaborator: 1, permission: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({collaborator: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({permission: 1}, function(err) {
+        collection.createIndex({permission: 1, collaborator: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1558,19 +1614,19 @@ function collaborator_tag_collaborator_tag(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({collaborator: 1, tag: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({collaborator: 1, tag: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({collaborator: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({tag: 1}, function(err) {
+        collection.createIndex({tag: 1, collaborator: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1597,13 +1653,23 @@ function collaborator_terminal_collaborator_terminal(db) {
       },
       (next) => {
         collection = db.collection('Collaborator_Terminal_collaborator_terminal');
-        collection.updateMany({}, {$rename: {'collaborator_terminals': 'collaborator', 'terminal_collaborators': 'terminal'}, $unset: {collection: ''}}, function(err, res) {
-          if (err) {
-            console.log('err', err);
-            return next();
-          }
-          next();
+        collection.dropIndex('collaborator_terminals_1', function(err) {
+          if (err) console.log(err);
+          collection.dropIndex('terminal_collaborators_1', function(err) {
+            if (err) console.log(err);
+            collection.dropIndex('collaborator_terminals_1_terminal_collaborators_1', function(err) {
+              if (err) console.log(err);
+              collection.updateMany({}, {$rename: {'collaborator_terminals': 'collaborator', 'terminal_collaborators': 'terminal'}, $unset: {collection: ''}}, function(err, res) {
+                if (err) {
+                  console.log('err', err);
+                  return next();
+                }
+                next();
+              })
+            })
+          })
         })
+
       },
       (next) => {
         checkDuplicates(collection, 'collaborator', 'terminal').then(() => {
@@ -1612,19 +1678,19 @@ function collaborator_terminal_collaborator_terminal(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({collaborator: 1, terminal: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({collaborator: 1, terminal: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({collaborator: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminal: 1}, function(err) {
+        collection.createIndex({terminal: 1, collaborator: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1666,19 +1732,19 @@ function invite_mapdata_subscriberininvite_notification(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({subscriberInInvite: 1, notification: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({subscriberInInvite: 1, notification: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({subscriberInInvite: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({notification: 1}, function(err) {
+        collection.createIndex({notification: 1, subscriberInInvite: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1720,19 +1786,19 @@ function invite_permission_invite_permission(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({invite: 1, permission: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({invite: 1, permission: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({invite: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({permission: 1}, function(err) {
+        collection.createIndex({permission: 1, invite: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1774,19 +1840,19 @@ function invite_tag_invite_tag(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({invite: 1, tag: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({invite: 1, tag: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({invite: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({tag: 1}, function(err) {
+        collection.createIndex({tag: 1, invite: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1829,19 +1895,19 @@ function invite_terminal_invite_terminal(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({invite: 1, terminal: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({invite: 1, terminal: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({invite: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminal: 1}, function(err) {
+        collection.createIndex({terminal: 1, invite: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1883,19 +1949,19 @@ function mapdata_role_notification_role(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({notification: 1, role: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({notification: 1, role: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({notification: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({role: 1}, function(err) {
+        collection.createIndex({role: 1, notification: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -1937,19 +2003,19 @@ function mapdata_terminal_notification_terminal(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({notification: 1, terminal: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({notification: 1, terminal: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({notification: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminal: 1}, function(err) {
+        collection.createIndex({terminal: 1, notification: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -2006,12 +2072,18 @@ function organization_terminal_organization_terminal(db) {
       },
       (next) => {
         collection = db.collection('Organization_Terminal_organization_terminal');
-        collection.updateMany({}, {$rename: {'organization_terminals': 'organization', 'terminal_organizations': 'terminal'}, $unset: {collection: ''}}, function(err, res) {
-          if (err) {
-            console.log('err', err);
-            return next();
-          }
-          next();
+        collection.dropIndex('organization_terminals_1', function(err) {
+          if (err) console.log(err);
+          collection.dropIndex('terminal_organizations_1', function(err) {
+            if (err) console.log(err);
+            collection.updateMany({}, {$rename: {'organization_terminals': 'organization', 'terminal_organizations': 'terminal'}, $unset: {collection: ''}}, function(err, res) {
+              if (err) {
+                console.log('err', err);
+                return next();
+              }
+              next();
+            })
+          })
         })
       },
       (next) => {
@@ -2021,19 +2093,19 @@ function organization_terminal_organization_terminal(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({organization: 1, terminal: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({organization: 1, terminal: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({organization: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminal: 1}, function(err) {
+        collection.createIndex({terminal: 1, organization: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -2060,13 +2132,24 @@ function permission_role_permission_role(db) {
       },
       (next) => {
         collection = db.collection('Permission_Role_permission_role');
-        collection.updateMany({}, {$rename: {'permission_roles': 'permission', 'role_permissions': 'role'}, $unset: {collection: ''}}, function(err, res) {
-          if (err) {
-            console.log('err', err);
-            return next();
-          }
-          next();
+        collection.dropIndex('permission_roles_1', function(err) {
+          if (err) console.log(err);
+          collection.dropIndex('role_permissions_1', function(err) {
+            if (err) console.log(err);
+            collection.dropIndex('permission_roles_1_role_permissions_1', function(err) {
+              if (err) console.log(err);
+              collection.updateMany({}, {$rename: {'permission_roles': 'permission', 'role_permissions': 'role'}, $unset: {collection: ''}}, function(err, res) {
+                if (err) {
+                  console.log('err', err);
+                  return next();
+                }
+                next();
+              })
+            })
+          })
         })
+
+
       },
       (next) => {
         checkDuplicates(collection, 'permission', 'role').then(() => {
@@ -2075,19 +2158,19 @@ function permission_role_permission_role(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({permission: 1, role: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({permission: 1, role: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({permission: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({role: 1}, function(err) {
+        collection.createIndex({role: 1, permission: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -2114,13 +2197,24 @@ function permission_terminaltype_permission_terminaltype(db) {
       },
       (next) => {
         collection = db.collection('Permission_TerminalType_permission_terminalType');
-        collection.updateMany({}, {$rename: {'permission_terminalsTypes': 'permission', 'terminaltype_permissions': 'terminalType'}, $unset: {collection: ''}}, function(err, res) {
-          if (err) {
-            console.log('err', err);
-            return next();
-          }
-          next();
+
+        collection.dropIndex('permission_terminalstypes_1', function(err) {
+          if (err) console.log(err);
+          collection.dropIndex('terminaltype_permissions_1', function(err) {
+            if (err) console.log(err);
+            collection.dropIndex('permission_terminalstypes_1_terminaltype_permissions_1', function(err) {
+              if (err) console.log(err);
+              collection.updateMany({}, {$rename: {'permission_terminalsTypes': 'permission', 'terminaltype_permissions': 'terminalType'}, $unset: {collection: ''}}, function(err, res) {
+                if (err) {
+                  console.log('err', err);
+                  return next();
+                }
+                next();
+              })
+            })
+          })
         })
+
       },
       (next) => {
         checkDuplicates(collection, 'permission', 'terminalType').then(() => {
@@ -2129,19 +2223,19 @@ function permission_terminaltype_permission_terminaltype(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({permission: 1, terminalType: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({permission: 1, terminalType: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({permission: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminalType: 1}, function(err) {
+        collection.createIndex({terminalType: 1, permission: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -2168,12 +2262,22 @@ function tableheader_terminaltype_tableheader_terminaltype(db) {
       },
       (next) => {
         collection = db.collection('TableHeader_TerminalType_tableHeader_terminalType');
-        collection.updateMany({}, {$rename: {'tableheader_terminalTypes': 'tableHeader', 'terminaltype_tableHeaders': 'terminalType'}, $unset: {collection: ''}}, function(err, res) {
-          if (err) {
-            console.log('err', err);
-            return next();
-          }
-          next();
+
+        collection.dropIndex('tableheader_terminaltypes_1', function(err) {
+          if (err) console.log(err);
+          collection.dropIndex('terminaltype_tableheaders_1', function(err) {
+            if (err) console.log(err);
+            collection.dropIndex('tableheader_terminaltypes_1_terminaltype_tableheaders_1', function(err) {
+              if (err) console.log(err);
+              collection.updateMany({}, {$rename: {'tableheader_terminalTypes': 'tableHeader', 'terminaltype_tableHeaders': 'terminalType'}, $unset: {collection: ''}}, function(err, res) {
+                if (err) {
+                  console.log('err', err);
+                  return next();
+                }
+                next();
+              })
+            })
+          })
         })
       },
       (next) => {
@@ -2183,19 +2287,19 @@ function tableheader_terminaltype_tableheader_terminaltype(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({tableHeader: 1, terminalType: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({tableHeader: 1, terminalType: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({tableHeader: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminalType: 1}, function(err) {
+        collection.createIndex({terminalType: 1, tableHeader: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -2238,19 +2342,19 @@ function tag_tag_child_parent(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({child: 1, parent: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({child: 1, parent: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({child: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({parent: 1}, function(err) {
+        collection.createIndex({parent: 1, child: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -2278,12 +2382,18 @@ function tag_terminal_tag_terminal(db) {
       },
       (next) => {
         collection = db.collection('Tag_Terminal_tag_terminal');
-        collection.updateMany({}, {$rename: {'tag_terminals': 'tag', 'terminal_tags': 'terminal'}, $unset: {collection: ''}}, function(err, res) {
-          if (err) {
-            console.log('err', err);
-            return next();
-          }
-          next();
+        collection.dropIndex('tag_terminals_1', function(err) {
+          if (err) console.log(err);
+          collection.dropIndex('terminal_tags_1', function(err) {
+            if (err) console.log(err);
+            collection.updateMany({}, {$rename: {'tag_terminals': 'tag', 'terminal_tags': 'terminal'}, $unset: {collection: ''}}, function(err, res) {
+              if (err) {
+                console.log('err', err);
+                return next();
+              }
+              next();
+            })
+          })
         })
       },
       (next) => {
@@ -2293,19 +2403,19 @@ function tag_terminal_tag_terminal(db) {
           next()
         })
       },
+      // (next) => {
+      //   collection.createIndex({tag: 1, terminal: 1}, {unique: true}, function(err) {
+      //     if (err) console.log('err', err);
+      //     next();
+      //   })
+      // },
       (next) => {
         collection.createIndex({tag: 1, terminal: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
-      },
-      (next) => {
-        collection.createIndex({tag: 1}, function(err) {
-          if (err) console.log('err', err);
-          next();
-        })
       },(next) => {
-        collection.createIndex({terminal: 1}, function(err) {
+        collection.createIndex({terminal: 1, tag: 1}, {unique: true}, function(err) {
           if (err) console.log('err', err);
           next();
         })
@@ -2330,8 +2440,14 @@ function checkDuplicates(collection, field1, field2) {
           })
       },
       (items, next) => {
+        let prevField1 = '';
         let prev = '';
-        async.each(items, (item, cb) => {
+        async.eachSeries(items, (item, cb) => {
+          if (prevField1 != item[field1].toString()) {
+            prev = item[field2].toString();
+            prevField1 = item[field1];
+            return cb();
+          };
           if (prev != item[field2].toString()) {
             prev = item[field2].toString();
             return cb();
